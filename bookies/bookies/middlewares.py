@@ -9,7 +9,7 @@ from scrapy import signals
 from itemadapter import is_item, ItemAdapter
 
 
-class MerrybetSpiderMiddleware:
+class BookiesSpiderMiddleware:
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the spider middleware does not modify the
     # passed objects.
@@ -56,7 +56,7 @@ class MerrybetSpiderMiddleware:
         spider.logger.info("Spider opened: %s" % spider.name)
 
 
-class MerrybetDownloaderMiddleware:
+class BookiesDownloaderMiddleware:
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
