@@ -7,7 +7,6 @@ class MerrybetSpider(scrapy.Spider):
     name = "merrybet"
     allowed_domains = ["m.merrybet.com"]
     baseUrl = "https://m.merrybet.com"
-    # events =f'/rest/market/events/{eventId}'
     start_urls = [f'{baseUrl}/rest/market/categories']
 
     def parse(self, response):
@@ -29,8 +28,26 @@ class MerrybetSpider(scrapy.Spider):
         event_ids = []
         # Extract the "eventId"
         event_id = [item['eventId'] for item in data['data']]
-        item = {
-            'event_id': data['data'][0]['eventId'],
-            # Other fields
-        }
-        yield item
+        for event in event_id:
+            events = f'/rest/market/events/{event}'
+            event_ids.append(events)
+        yield from response.follow_all(event_ids, self.event_parse)
+
+    def event_parse(self, response):
+        """Get the event from the event id"""
+        data = json.loads(response.body)
+
+        # Check if category3Name contains "Outrights"
+        if "Outrights" not in data["data"]["category3Name"]:
+            item = {
+                "time": data["data"]["eventStart"],
+                "sportType": data["data"]["category1Name"],
+                "country": data["data"]["category2Name"],
+                "league": data["data"]["category3Name"],
+                "teams": data["data"]["eventName"],
+                "gameName": [item["gameName"] for item in data["data"]["eventGames"]],
+                "outcomeName": [item["outcomeName"] for j in data["data"]["eventGames"] for item in j["outcomes"]],
+                "outcomeOdds": [item["outcomeOdds"] for j in data["data"]["eventGames"] for item in j["outcomes"]],
+            }
+
+            yield item
