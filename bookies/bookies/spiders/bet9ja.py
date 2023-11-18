@@ -2,14 +2,14 @@ import json
 import scrapy
 
 
-class OneXBetSpider(scrapy.Spider):
-    """Class for scraping OneXBet data"""
-    name = "oneXBet"
-    allowed_domains = ["1xbet.ng"]
-    baseUrl = "https://ng.1x001.com"
+class Bet9jaSpider(scrapy.Spider):
+    """Class for scraping bet9ja data"""
+    name = "bet9ja"
+    allowed_domains = ["sports.bet9ja.com"]
+    baseUrl = "https://sports.bet9ja.com"
     # event_url = "https://1xbet.ng/LineFeed/GetGameZip?id=186290641&lng=en&tzo=-7&isSubGames=true&GroupEvents=true&countevents=50&partner=159&grMode=2&country=132&marketType=1&mobi=true"
     start_urls = [
-        f'{baseUrl}/service-api/DbService/LongCache/GetSports?lng=en']
+        f'{baseUrl}/desktop/feapi/PalimpsestAjax/GetEventsInDailyBundleV3?DISP=1000&DISPH=0&SPORTID=1&MKTKEY=1&v_cache_version=1.243.3.136']
 
     def parse(self, response):
         data = json.loads(response.body)
@@ -23,17 +23,17 @@ class OneXBetSpider(scrapy.Spider):
 
       # yield from response.follow_all(category_id, self.category_parse)
 
-    def game_parse(self, response):
-        """All games"""
-        data = json.loads(response.body)
-        # Extarct all event ID values
-        event_ids = []
-        # Extract the "eventId"
-        event_id = [item['eventId'] for item in data['data']]
-        for event in event_id:
-            events = f'/rest/market/events/{event}'
-            event_ids.append(events)
-        yield from response.follow_all(event_ids, self.event_parse)
+   #  def game_parse(self, response):
+   #      """All games"""
+   #      data = json.loads(response.body)
+   #      # Extarct all event ID values
+   #      event_ids = []
+   #      # Extract the "eventId"
+   #      event_id = [item['eventId'] for item in data['data']]
+   #      for event in event_id:
+   #          events = f'/rest/market/events/{event}'
+   #          event_ids.append(events)
+   #      yield from response.follow_all(event_ids, self.event_parse)
 
   #  def event_parse(self, response):
   #      """Get the event from the event id"""
