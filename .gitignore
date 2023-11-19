@@ -1,5 +1,6 @@
 *.json
 *.exe
+*.html
+*.log
 chromedriver-win64
 *.chromedrive
-*.html
